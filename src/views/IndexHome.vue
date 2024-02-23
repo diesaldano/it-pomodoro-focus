@@ -63,17 +63,17 @@
             @click="toggleTimer"
             :disabled="isLoading"
           >
-            {{ isRunning ? "Pause" : "Start" }}
+            <i :class="isRunning ? 'pi pi-pause' : 'pi pi-play'"></i>
           </button>
           <button
             class="btn btn-danger btn-lg me-2"
             @click="resetTimer"
             :disabled="isLoading"
           >
-            Reset
+            <i class="pi pi-refresh"></i>
           </button>
           <button class="btn btn-warning btn-lg" @click="testAlarm">
-            Test Alarm
+            <i class="pi pi-volume-up"></i>
           </button>
         </div>
       </div>
