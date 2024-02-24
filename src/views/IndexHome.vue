@@ -50,7 +50,7 @@
 
       <div v-else>
         <!-- Título y temporizador -->
-        <h1 class="pt-4">{{ capitalizedCurrentTab }} Time</h1>
+        <h1 class="pt-4 display-10">{{ capitalizedCurrentTab }} Time</h1>
 
         <div class="timer">
           {{ formattedTime }}
@@ -81,6 +81,8 @@
   </div>
 </template>
 <script>
+
+import { useRouter } from 'vue-router';
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 
 export default {
@@ -93,10 +95,11 @@ export default {
     const timer = ref(workTime);
     const isRunning = ref(false);
     const isLoading = ref(false);
+    const router = useRouter();
 
     const alarm = new Audio("./alarm.mp3");
 
-    let interval = null;
+    let timeWorker;
 
     const selectTab = (tab) => {
       currentTab.value = tab;
@@ -122,37 +125,25 @@ export default {
 
     const resetTimer = () => {
       isLoading.value = true;
-      stopTimer();
-      setTimeout(() => {
-        timer.value = getInitialTime();
-        isLoading.value = false;
-        isRunning.value = false;
-      }, 1000);
+      timeWorker.postMessage('stop');
+      timer.value = getInitialTime();
+      timeWorker.postMessage('reset');
+      isRunning.value = false;
+      isLoading.value = false;
     };
 
     const stopTimer = () => {
-      if (interval) {
-        clearInterval(interval);
-        interval = null;
-      }
+      timeWorker.postMessage('stop');
     };
 
     const toggleTimer = () => {
       if (isRunning.value) {
-        clearInterval(interval);
-        interval = null;
+        timeWorker.postMessage('stop');
       } else {
-        interval = setInterval(() => {
-          if (timer.value > 0) {
-            timer.value--;
-          } else {
-            clearInterval(interval);
-            alarm.play(); // Asegúrate de que esto esté definido correctamente
-          }
-        }, 1000);
+        timeWorker.postMessage('start');
       }
       isRunning.value = !isRunning.value;
-      isLoading.value = false; // Esto asegura que el spinner se oculte cuando el temporizador inicie
+      isLoading.value = false; 
     };
 
     watch(timer, (newValue) => {
@@ -179,11 +170,19 @@ export default {
     };
 
     onMounted(() => {
-      // Initialize timer here if needed
+      timeWorker = new Worker('./timerWorker.js');
+      timeWorker.onmessage = (e) => {
+        timer.value = getInitialTime() - e.data;
+        if (timer.value <= 0) {
+          stopTimer();
+          alarm.play();
+        }
+      }
     });
 
     onUnmounted(() => {
-      stopTimer();
+      // stopTimer();
+      timeWorker.terminate();
     });
 
     return {

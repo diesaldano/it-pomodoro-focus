@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import IndexHome from '../views/IndexHome.vue'
+import IndexCountDown from '../views/IndexCountDown.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -7,6 +8,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: IndexHome
   },
+  {
+    path: '/count',
+    name: 'IndexCountDown',
+    component: IndexCountDown
+  }
 ]
 
 const router = createRouter({
