@@ -2,7 +2,7 @@
   <div>
     <router-view />
     <div class="d-flex justify-content-center floating-toolbar">
-        <Toolbar style="border-radius: 3rem; padding: 1rem 1rem 1rem 1.5rem; background-color: transparent; box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);">
+        <Toolbar style="border-radius: 3rem; padding: 1rem 1rem 1rem 1.5rem; background-color: rgba(88, 88, 88, .1); box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);">
             <template #start>
                 <div class="flex align-items-center gap-2">
                     <Button label="Timer" style="color: white; hover: black;" text plain @click="goTo('/')"/>

@@ -95,8 +95,7 @@ export default {
     const timer = ref(workTime);
     const isRunning = ref(false);
     const isLoading = ref(false);
-    const router = useRouter();
-
+    
     const alarm = new Audio("./alarm.mp3");
 
     let timeWorker;
@@ -169,6 +168,16 @@ export default {
       }
     };
 
+    const nextTab = () => {
+      if(currentTab.value === 'work') {
+        currentTab.value = 'short';
+      } else if(currentTab.value === 'short') {
+        currentTab.value = 'long';
+      } else {
+        currentTab.value = 'work';
+      }
+    }
+
     onMounted(() => {
       timeWorker = new Worker('./timerWorker.js');
       timeWorker.onmessage = (e) => {
@@ -176,6 +185,9 @@ export default {
         if (timer.value <= 0) {
           stopTimer();
           alarm.play();
+          timeWorker.postMessage('reset');
+          toggleTimer();
+          nextTab();
         }
       }
     });
@@ -209,7 +221,7 @@ export default {
   margin: 0; /* Remover márgenes predeterminados */
   padding: 0; /* Remover rellenos predeterminados */
   overflow: hidden; /* Ocultar desbordamiento */
-  transition: background-color 0.3s;
+  transition: background-color 0.5s ease;
 }
 
 .work-time {
