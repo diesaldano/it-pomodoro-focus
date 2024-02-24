@@ -185,8 +185,7 @@ export default {
         if (timer.value <= 0) {
           stopTimer();
           alarm.play();
-          timeWorker.postMessage('reset');
-          toggleTimer();
+          resetTimer();
           nextTab();
         }
       }
