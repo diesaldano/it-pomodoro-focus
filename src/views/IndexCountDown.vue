@@ -3,28 +3,74 @@
     <div
       class="col-6 card p-5 text-center d-block mx-auto shadow p-3 mb-5 rounded"
     >
-      <h1 id="headline">Progresive year</h1>
+      <hr />
       <div id="countdown">
         <ul class="list-unstyled">
           <li>
-            <span id="days">{{ timeLeft.days }}</span> Days
+            <span id="days">{{ timeLeft.days }}</span>
+            <p
+              style="
+                font-size: 1.5rem;
+                position: relative;
+                top: -10px;
+                font-weight: 400;
+              "
+            >
+              Days
+            </p>
           </li>
           <li>
-            <span id="hours">{{ timeLeft.hours }}</span> Hours
+            <span id="hours">{{ timeLeft.hours }}</span>
+            <p
+              style="
+                font-size: 1.5rem;
+                position: relative;
+                top: -10px;
+                font-weight: 400;
+              "
+            >
+              Hours
+            </p>
           </li>
           <li>
-            <span id="minutes">{{ timeLeft.minutes }}</span> Minutes
+            <span id="minutes">{{ timeLeft.minutes }}</span>
+            <p
+              style="
+                font-size: 1.5rem;
+                position: relative;
+                top: -10px;
+                font-weight: 400;
+              "
+            >
+              Minutes
+            </p>
           </li>
           <li>
-            <span id="seconds">{{ timeLeft.seconds }}</span> Seconds
+            <span id="seconds">{{ timeLeft.seconds }}</span>
+            <p
+              style="
+                font-size: 1.5rem;
+                position: relative;
+                top: -10px;
+                font-weight: 400;
+              "
+            >
+              Seconds
+            </p>
           </li>
         </ul>
       </div>
+      <hr />
+      <ProgressBar 
+        :value="progress.toFixed(2)"
+        :style="{ height: '20px', color: 'black', margin: '3em auto 0em', width: '100%' }"
+      />
     </div>
   </div>
 </template>
 <script>
 import { ref, onMounted, onUnmounted } from "vue";
+import { differenceInDays } from 'date-fns';
 
 export default {
   name: "IndexCountDown",
@@ -35,6 +81,18 @@ export default {
       minutes: 0,
       seconds: 0,
     });
+
+    const progress = ref(0);
+
+    const calculateProgress = () => {
+      const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+      const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+      const today = new Date();
+      const daysInYear = differenceInDays(endOfYear, startOfYear);
+      const daysPassed = differenceInDays(today, startOfYear);
+      const progressPercentage = (daysPassed / daysInYear) * 100;
+      progress.value = progressPercentage;
+    };
 
     const updateCountdown = () => {
       const now = new Date();
@@ -49,7 +107,10 @@ export default {
 
     const countdownInterval = setInterval(updateCountdown, 1000);
 
-    onMounted(updateCountdown);
+    onMounted(() => {
+      updateCountdown();
+      calculateProgress();
+    });
 
     onUnmounted(() => {
       clearInterval(countdownInterval);
@@ -57,6 +118,7 @@ export default {
 
     return {
       timeLeft,
+      progress,
     };
   },
 };
@@ -69,14 +131,15 @@ export default {
 
 #countdown ul li {
   display: inline-block;
-  font-size: 2rem;
+  font-size: 3rem;
+  font-weight: 700;
   text-align: center;
-  margin: 0 10px;
+  margin: 0 20px;
 }
 
 #countdown ul li span {
   display: block;
-  font-size: 4.5rem;
+  font-size: 5rem;
 }
 
 .pomodoro {

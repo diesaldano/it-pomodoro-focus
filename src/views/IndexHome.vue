@@ -12,7 +12,7 @@
     <div class="col-4 card p-5 text-center d-block mx-auto shadow p-3 mb-5 rounded">
       <!-- Pestañas para los diferentes tiempos -->
       <ul class="nav nav-tabs">
-        <li class="nav-item">
+        <li class="nav-item" style="cursor: pointer;">
           <a
             class="nav-link"
             :class="{ active: currentTab === 'work' }"
@@ -20,7 +20,7 @@
             >Work Time</a
           >
         </li>
-        <li class="nav-item">
+        <li class="nav-item " style="cursor: pointer;">
           <a
             class="nav-link"
             :class="{ active: currentTab === 'short' }"
@@ -28,7 +28,7 @@
             >Short Break</a
           >
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="cursor: pointer;">
           <a
             class="nav-link"
             :class="{ active: currentTab === 'long' }"
